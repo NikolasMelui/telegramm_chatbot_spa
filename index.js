@@ -25,7 +25,7 @@ setInterval(function() {
   for (var i = 0; i < notes.length; i++) {
     var curDate = new Date().getHours() + ':' + new Date().getMinutes();
     if (notes[i]['time'] == curDate) {
-      bot.sendMessage(notes[i]['uid'], 'Эй, ты просил напомнить, что ' + notes[i]['text'] + ' ты собирался сделать прямо сейчас!');
+      bot.sendMessage(notes[i]['uid'], 'Эй, ты просил меня напомнить тебе, чтобы ты не забыл ' + notes[i]['text']);
       notes.splice(i, 1);
     }
   }
