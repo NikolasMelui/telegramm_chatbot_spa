@@ -1,0 +1,23 @@
+{
+  "name": "telegramm_chatbot_spa",
+  "version": "0.1.0",
+  "description": "Look into my repo)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NikolasMelui/telegramm_chatbot_spa.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NikolasMelui/telegramm_chatbot_spa/issues"
+  },
+  "homepage": "https://github.com/NikolasMelui/telegramm_chatbot_spa#readme",
+  "devDependencies": {
+    "node-telegram-bot-api": "^0.27.0",
+    "telegram-bot-api": "^1.2.0"
+  }
+}
