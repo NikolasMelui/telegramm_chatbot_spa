@@ -1,13 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
-  <meta charset="UTF-8">
-  <title>MessageCatcher</title>
-  <link rel="stylesheet" type="text/css" href="main.css">
+  <meta charset="UTF-8"/>
+  <title>Telegramm_chatbot_spa</title>
+  
+  <meta name="description" content="Simple SPA chat working with Telergamm Bot!">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <script src="node_modules/socket.io-client/dist/socket.io.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script type="text/javascript" src="main.js"></script>
+  <link rel="stylesheet" href="/styles/style.css">
 </head>
 <body>
-<div id="app"></div>
+<div class="main">
+  <div class="friend_list">
+    <img src="assets/logo_DOBRO.png">
+    <div class="well">
+      <ul class="friends" id="users">
+      
+      </ul>
+    </div>
+  </div>
+  <div class="chat" id="chat">
+    <form id="messageForm">
+      <div class="form-group">
+        <input class="form-control" id="message"/>
+        <br/>
+        <input type="submit" class="btn btn-primary" value="Send Massage">
+      </div>
+    </form>
+  </div>
+</div>
+
+<style></style>
+
+<script>
+  
+  $(function() {
+    var socket = io.connect();
+    var $messageForm = $('#messageForm');
+    var $message = $('#message');
+    var $chat = $('#chat');
+    var $users = $('#users');
+    var $username = $('#username');
+    
+    $messageForm.submit(function(e) {
+      e.preventDefault();
+      socket.emit('send message', $message.val());
+      $message.val('');
+    });
+    socket.on('new message', function(data) {
+      $chat.append('<div class="well">' + data.msg + '</div>');
+    });
+  });
+
+</script>
 </body>
 </html>
