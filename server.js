@@ -1,11 +1,19 @@
-var fs = require('fs');
-var url = require('url');
-var path = require('path');
-var express = require('express');
-var app = express();
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
-var users = [];
+const TelegramBot = require('node-telegram-bot-api'); // Апишка телеграмм бота
+const config = require('./config.json'); // Конфигурационный файл
+const token = config.telegramm.token; // Передаем токен из конфиг файла
+const admin = require("firebase-admin"); // Апишка для firebase базы данных
+
+const bot = new TelegramBot(token, {polling: true}); //Создаем объект бота
+
+const fs = require('fs');
+const url = require('url');
+const path = require('path');
+const express = require('express');
+const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io').listen(server);
+
+var usersChat = [];
 var connections = [];
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -23,33 +31,99 @@ app.get('/', function(req, res) {
 io.sockets.on('connection', function(socket) {
   connections.push(socket);
   console.log('Connection: %s socket connected', connections.length);
+});
 
-  //Disconnect
-  socket.on('disconnect', function(data) {
-    if (!socket.username) return;
-    users.splice(users.indexOf(socket.username), 1);
-    updateUsernames();
-    connections.splice(connections.indexOf(socket), 1);
-    console.log('Disconnected: %s sockets connected', connections.length);
-  });
+function User() {}
 
-  //Send Message
-  socket.on('send message', function(data) {
-    io.sockets.emit('new message', {msg: data});
-  });
-  
-  
-  //New User => user будет прилетать из базы данных и улетать через сокет на веб
-  //А ещё мы должны отправлять ссылку юзеру на этот самый чат, в котором он уже будет зарегистрирован!!!! Пиздец!!!
-  socket.on('bew user', function(data, callback) {
-    callback(true);
-    socket.username = data;
-    users.push(socket, username);
-    updateUsernames();
-  });
-  
-  function updateUsernames() {
-    io.sockets.emit('get users', usernames);
+var questionMassive = ["What is your name?", "What is your surname?", "What is your photo?"],
+  i = 0,
+  users = [],
+  j = 0;
+
+function findUserByChatId(chatId) {
+  for (i = 0; i < users.length; i++) {
+    if (users[i].chatId === chatId)
+      return users[i];
+  }
+  return false;
+}
+bot.on('message', function(msg) {
+  var chatId = msg.chat.id;
+  var userExist = findUserByChatId(chatId);
+  if (msg.text === '/start') {
+    if (!userExist) {
+      var user = new User();
+      user.chatId = chatId;
+      user.counter = 0;
+      users.push(user);
+    } else {
+      userExist.counter = 0;
+    }
+    bot.sendMessage(chatId, questionMassive[0], {caption: "I'm a bot!"});
+    console.log(users);
+  }
+  else if (userExist) {
+    console.log(j);
+    switch (userExist.counter) {
+      case 0:
+        userExist.name = msg.text;
+        break;
+      case 1:
+        userExist.surname = msg.text;
+        break;
+      case 2:
+        bot.getFileLink(msg.photo[0].file_id).then(
+          resolve => {
+            // первая функция-обработчик - запустится при вызове resolve
+            userExist.photo = resolve;
+            console.log(userExist);
+          }
+          ,
+          reject =>
+          {
+            // вторая функция - запустится при вызове reject
+            userExist.photo = reject; // error - аргумент reject
+            console.log(userExist);
+          }
+        )
+        ;
+        break;
+    }
+    userExist.counter++;
+    if (userExist.counter < questionMassive.length) {
+      bot.sendMessage(chatId, questionMassive[userExist.counter], {caption: "I'm a bot!"});
+      console.log(userExist.counter);
+    }
+    if (userExist.counter == questionMassive.length) {
+      if (usersChat.indexOf(userExist)) {
+        usersChat.push(userExist);
+        io.emit('get users', usersChat);
+      }
+      bot.sendMessage(chatId, "Ссылка на фото:" + userExist.photo, {caption: "Ссылка"});
+    }
+    if (userExist.counter >= questionMassive.length) {
+      io.emit('new message', { msg: msg.text, user: userExist.name + ' ' + userExist.surname });
+    }
+    console.log(users);
   }
 });
 
+/*Инициализация базы данных*/
+admin.initializeApp({
+  credential: admin.credential.cert(config.admin),
+  databaseURL: "https://telegrammchatbotspa.firebaseio.com"
+});
+
+// Функция для нового пользователя (пушит его в базу данных)
+function dbPush(tabletName, pushed) { // Принимает имя таблицы для пушинга и, собственно, объект для пуша
+  const db = admin.database(); //
+  const ref = db.ref("/" + tabletName);
+  return ref.push(pushed).key;
+}
+
+//Функция для существующего пользователя (обновляет существующие данные)
+function dbUpdate(refKey, tabletName, pushed) {
+  const db = admin.database();
+  const ref = db.ref("/" + tabletName + "/" + refKey);
+  ref.update(pushed);
+}

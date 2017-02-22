@@ -6,33 +6,36 @@
   
   <meta name="description" content="Simple SPA chat working with Telergamm Bot!">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="node_modules/socket.io-client/dist/socket.io.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <link rel="stylesheet" href="/styles/style.css">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+        integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+  
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+          integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+          crossorigin="anonymous"></script>
 </head>
 <body>
-<div class="main">
-  <div class="friend_list">
-    <img src="assets/logo_DOBRO.png">
+
+<div id="messageArea" class="row">
+  <div class="col-md-4">
     <div class="well">
-      <ul class="friends" id="users">
-      
-      </ul>
+      <h3>Online Users</h3>
+      <ul id="users" class="list-group"></ul>
     </div>
   </div>
-  <div class="chat" id="chat">
-    <form id="messageForm">
-      <div class="form-group">
-        <input class="form-control" id="message"/>
-        <br/>
-        <input type="submit" class="btn btn-primary" value="Send Massage">
-      </div>
-    </form>
+  <div class="col-md-8">
+    <div id="chat" class="chat"></div>
   </div>
 </div>
 
-<style></style>
 
 <script>
   
@@ -41,16 +44,22 @@
     var $messageForm = $('#messageForm');
     var $message = $('#message');
     var $chat = $('#chat');
+    var $messageArea = $('#messageArea');
+    var $userFormArea = $('#userFormArea');
+    var $userForm = $('#userForm');
     var $users = $('#users');
     var $username = $('#username');
     
-    $messageForm.submit(function(e) {
-      e.preventDefault();
-      socket.emit('send message', $message.val());
-      $message.val('');
-    });
     socket.on('new message', function(data) {
-      $chat.append('<div class="well">' + data.msg + '</div>');
+      $chat.append('<div class="well"><strong>' + data.user + ': ' + '</strong>' + data.msg + '</div>');
+    });
+    
+    socket.on('get users', function(data) {
+      var html = '';
+      for (var i = 0; i < data.length; i++) {
+        html += '<li class="list-group-item">' + data[i].name + ' ' + data[i].surname + '</li>';
+      }
+      $users.html(html);
     });
   });
 

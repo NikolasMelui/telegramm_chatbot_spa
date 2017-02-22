@@ -1,0 +1,66 @@
+//colors
+$color_friend_list: #181818;
+$color_white: #fff;
+$color_message_list: #e9e9e9;
+
+//fonts
+$font_0: MyriadProRegular;
+
+//urls
+$url_0: url(../fonts/MyriadProRegular/MyriadProRegular.eot);
+$url_1: url(../fonts/MyriadProRegular/MyriadProRegular.eot?#iefix);
+$url_2: url(../fonts/MyriadProRegular/MyriadProRegular.woff);
+$url_3: url(../fonts/MyriadProRegular/MyriadProRegular.ttf);
+
+@font-face {
+  font-family: $font_0;
+  src: $url_1 format("embedded-opentype"), $url_2 format("woff"), $url_3 format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+.main {
+  margin: 0 8.3% 0 8.3%;
+  height: 100%;
+  display: flex;
+  width: 83.37%;
+  .friend_list {
+    width: 22.43%;
+    height: 100%;
+    background-color: $color_friend_list;
+    img {
+      margin: 35px 7.2% 16px 7.2%;
+      max-width: 131px;
+      width: 100%;
+    }
+    .friends li {
+      height: 100px;
+      list-style-type: none;
+      color: $color_white;
+    }
+  }
+  .chat {
+    width: 77.57%;
+    height: 100%;
+    background-color: $color_message_list;
+  }
+}
+#messageForm {
+  margin-top: 20px;
+}
+.well {
+  margin-top: 20px;
+}
+@media only screen and(min-width: 250px) and(max-width: 1200px), only screen and(min-device-width: 250px) and(max-device-width: 1200px) {
+  .main {
+    margin: 0;
+    width: 100%;
+    .friend_list img {
+      margin: 0;
+    }
+  }
+}
+.form-group .btn {
+  margin-top: 20px;
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+  border-radius: 17px;
+}
