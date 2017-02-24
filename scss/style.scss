@@ -1,5 +1,5 @@
 //colors
-$color_friend_list: #181818;
+$color_user_list: #181818;
 $color_white: #fff;
 $color_message_list: #e9e9e9;
 
@@ -18,49 +18,59 @@ $url_3: url(../fonts/MyriadProRegular/MyriadProRegular.ttf);
   font-style: normal;
   font-weight: normal;
 }
-.main {
-  margin: 0 8.3% 0 8.3%;
-  height: 100%;
-  display: flex;
-  width: 83.37%;
-  .friend_list {
+
+body {
+  height: 100vh;
+  background-color: #0E0E0E;
+}
+
+.row {
+  width: 83.33%;
+  height: 100vh;
+  margin: 0 8.33% 0 8.33%;
+  #user_list {
+    padding-right: 0;
     width: 22.43%;
-    height: 100%;
-    background-color: $color_friend_list;
-    img {
-      margin: 35px 7.2% 16px 7.2%;
-      max-width: 131px;
-      width: 100%;
-    }
-    .friends li {
-      height: 100px;
-      list-style-type: none;
-      color: $color_white;
-    }
-  }
-  .chat {
-    width: 77.57%;
-    height: 100%;
-    background-color: $color_message_list;
-  }
-}
-#messageForm {
-  margin-top: 20px;
-}
-.well {
-  margin-top: 20px;
-}
-@media only screen and(min-width: 250px) and(max-width: 1200px), only screen and(min-device-width: 250px) and(max-device-width: 1200px) {
-  .main {
-    margin: 0;
-    width: 100%;
-    .friend_list img {
+    #user_list_well {
       margin: 0;
+      padding: 0;
+      height: 100vh;
+      border: none;
+      border-radius: 0;
+      background-color: #181818;
+      
+      #user_list_logo {
+        margin: 35px 0 42px 25px;
+      }
+      #users {
+        height: 50px;
+        margin-bottom: 50px;
+        #user {
+        background-color: #181818;
+        border: none;
+        color: #ffffff;
+          display: flex;
+          #user_avatar {
+            width: 50px;
+            height: 50px;
+            margin: 0;
+          }
+      }
     }
   }
 }
-.form-group .btn {
-  margin-top: 20px;
-  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
-  border-radius: 17px;
+
+#message_list {
+  height: 100vh;
+  width: 77.56%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background-color: #e9e9e9;
+  #chat {
+    
+  }
+}
+  
 }

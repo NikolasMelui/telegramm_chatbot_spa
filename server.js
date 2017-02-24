@@ -7,6 +7,7 @@ const bot = new TelegramBot(token, {polling: true}); //Создаем объек
 
 const fs = require('fs');
 const url = require('url');
+const http = require('http');
 const path = require('path');
 const express = require('express');
 const app = express();
@@ -29,21 +30,22 @@ app.get('/', function(req, res) {
 
 //Connection
 io.sockets.on('connection', function(socket) {
-  connections.push(socket);
-  console.log('Connection: %s socket connected', connections.length);
+  connections.push(socket); // сокеты создаются при заходе на веб-морду (увы)
+  console.log('Connection: %s socket connected', connections.length); // кол-во сокетов - для отладки
+  io.emit('get users', usersChat); // смотрим кол-во юзеров в чате
 });
 
-function User() {}
+function User() {
+}
 
 var questionMassive = ["What is your name?", "What is your surname?", "What is your photo?"],
   i = 0,
-  users = [],
   j = 0;
 
 function findUserByChatId(chatId) {
-  for (i = 0; i < users.length; i++) {
-    if (users[i].chatId === chatId)
-      return users[i];
+  for (i = 0; i < usersChat.length; i++) {
+    if (usersChat[i].chatId === chatId)
+      return usersChat[i];
   }
   return false;
 }
@@ -55,12 +57,12 @@ bot.on('message', function(msg) {
       var user = new User();
       user.chatId = chatId;
       user.counter = 0;
-      users.push(user);
+      usersChat.push(user);
     } else {
       userExist.counter = 0;
     }
     bot.sendMessage(chatId, questionMassive[0], {caption: "I'm a bot!"});
-    console.log(users);
+    console.log(usersChat);
   }
   else if (userExist) {
     console.log(j);
@@ -79,14 +81,12 @@ bot.on('message', function(msg) {
             console.log(userExist);
           }
           ,
-          reject =>
-          {
+          reject => {
             // вторая функция - запустится при вызове reject
             userExist.photo = reject; // error - аргумент reject
             console.log(userExist);
           }
-        )
-        ;
+        );
         break;
     }
     userExist.counter++;
@@ -98,13 +98,19 @@ bot.on('message', function(msg) {
       if (usersChat.indexOf(userExist)) {
         usersChat.push(userExist);
         io.emit('get users', usersChat);
+        var file = fs.createWriteStream("file.jpg");
+        var request = http.get(userExist.photo, function(response) {
+          response.pipe(file);
+        });
+        
       }
       bot.sendMessage(chatId, "Ссылка на фото:" + userExist.photo, {caption: "Ссылка"});
     }
     if (userExist.counter >= questionMassive.length) {
-      io.emit('new message', { msg: msg.text, user: userExist.name + ' ' + userExist.surname });
+      io.emit('get users', usersChat);
+      io.emit('new message', {msg: msg.text, user: userExist.name + ' ' + userExist.surname});
     }
-    console.log(users);
+    console.log(usersChat);
   }
 });
 

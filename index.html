@@ -8,30 +8,22 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="node_modules/socket.io-client/dist/socket.io.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <!-- Optional theme -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-        integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-  
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-          integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-          crossorigin="anonymous"></script>
+  <link rel="stylesheet" type="text/css" href="css/style.css"/>
 </head>
 <body>
 
 <div id="messageArea" class="row">
-  <div class="col-md-4">
-    <div class="well">
-      <h3>Online Users</h3>
+  <div class="col-md-4" id="user_list">
+    <div class="well" id="user_list_well">
+      <img id="user_list_logo" src="assets/logo_DOBRO.png" alt="DOBRO">
       <ul id="users" class="list-group"></ul>
     </div>
   </div>
-  <div class="col-md-8">
+  <div class="col-md-8" id="message_list">
     <div id="chat" class="chat"></div>
   </div>
 </div>
@@ -41,12 +33,9 @@
   
   $(function() {
     var socket = io.connect();
-    var $messageForm = $('#messageForm');
     var $message = $('#message');
     var $chat = $('#chat');
     var $messageArea = $('#messageArea');
-    var $userFormArea = $('#userFormArea');
-    var $userForm = $('#userForm');
     var $users = $('#users');
     var $username = $('#username');
     
@@ -56,8 +45,12 @@
     
     socket.on('get users', function(data) {
       var html = '';
-      for (var i = 0; i < data.length; i++) {
-        html += '<li class="list-group-item">' + data[i].name + ' ' + data[i].surname + '</li>';
+        for (var i = 0; i < data.length; i++) {
+          var user_avatar = '<p class="user_avatar" id="user_avatar"> A <!--data[i].avatar--> </p>'; //временная заглушка для аватара
+          var user_nameandsurname = '<p class="user_name" id="user_name">' + data[i].name + ' ' + data[i].surname + '</p>';
+          var user_lastmessage = '<p class="user_lastmessage" id="user_lastmessage"> lastmessage <!--data[i].lastmessage-->  </p>';
+          var user_lastmessagetime = '<p class="user_lastmessagetime" id="user_lastmessagetime"> 1min <!--data[i].lastmessagetime-->  </p>';
+        html += '<li class="list-group-item" id="user">' + user_avatar + user_nameandsurname + '<br>' + user_lastmessage + user_lastmessagetime + '</li>';
       }
       $users.html(html);
     });
