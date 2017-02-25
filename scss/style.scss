@@ -48,20 +48,46 @@ img {
       #users {
         margin: 0;
         height: 100vh;
+        overflow: hidden;
         #user {
-          height: 50px;
+          height: 70px;
           background-color: #181818;
           border: none;
           color: #ffffff;
           display: flex;
-          #user_avatar {
-            width: 50px;
-            height: 50px;
-            margin: 0;
+          overflow: hidden;
+          #all_user_info {
+            display: flex;
+            #user_text_info {
+            #user_message_info {
+              display: inline-flex;
+              #user_last_message {
+                
+              }
+              #user_last_message_time {
+                margin-left: 128px;
+              }
+            }
           }
         }
       }
     }
+  }
+}
+  #user_avatar {
+    overflow: hidden;
+    border-radius: 35px;
+    width: 50px;
+    margin: 0;
+    #user_avatar_img {
+      height: 50px;
+    }
+  }
+  #user_name {
+    margin: 6px 0 0 20px;
+  }
+  #user_last_message {
+    margin: 1px 0 10px 21px;
   }
   #message_list {
     height: 100vh;
@@ -74,6 +100,7 @@ img {
     #chat {
       height: 100vh;
       .well {
+        display: flex;
         width: 72%;
         margin: 35px 25px;
       }
