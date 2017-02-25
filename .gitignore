@@ -1,5 +1,8 @@
-/assets/test_case.jpg
-/assets/test_case_prog.psd
+#assets
+assets/
+
+#css_files
+css/
 
 #config_file
 config.json
