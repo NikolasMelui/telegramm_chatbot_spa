@@ -23,54 +23,64 @@ body {
   height: 100vh;
   background-color: #0E0E0E;
 }
+img {
+  width: 100%;
+}
 
 .row {
   width: 83.33%;
   height: 100vh;
   margin: 0 8.33% 0 8.33%;
   #user_list {
-    padding-right: 0;
+    padding: 0;
     width: 22.43%;
     #user_list_well {
       margin: 0;
-      padding: 0;
+      padding: 35px 0 0 25px;
       height: 100vh;
       border: none;
       border-radius: 0;
       background-color: #181818;
-      
-      #user_list_logo {
-        margin: 35px 0 42px 25px;
+      #logo {
+        width: 40%;
+        margin: 0;
       }
       #users {
-        height: 50px;
-        margin-bottom: 50px;
+        margin: 0;
+        height: 100vh;
         #user {
-        background-color: #181818;
-        border: none;
-        color: #ffffff;
+          height: 50px;
+          background-color: #181818;
+          border: none;
+          color: #ffffff;
           display: flex;
           #user_avatar {
             width: 50px;
             height: 50px;
             margin: 0;
           }
+        }
       }
     }
   }
+  #message_list {
+    height: 100vh;
+    width: 77.56%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background-color: #e9e9e9;
+    #chat {
+      height: 100vh;
+    }
+  }  
 }
 
-#message_list {
-  height: 100vh;
-  width: 77.56%;
-  margin: 0;
-  padding: 0;
-  border: none;
-  border-radius: 0;
-  background-color: #e9e9e9;
-  #chat {
-    
+@media screen and (min-width: 300px) and (max-width: 992px)  {
+  .row {
+    width: 100%;
+    margin: 0;
+    display: flex;
   }
-}
-  
 }
