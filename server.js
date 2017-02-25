@@ -1,4 +1,4 @@
-gulconst TelegramBot = require('node-telegram-bot-api'); // Апишка телеграмм бота
+const TelegramBot = require('node-telegram-bot-api'); // Апишка телеграмм бота
 const config = require('./config.json'); // Конфигурационный файл
 const token = config.telegramm.token; // Передаем токен из конфиг файла
 const admin = require("firebase-admin"); // Апишка для firebase базы данных
