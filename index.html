@@ -42,10 +42,7 @@
     var $username = $('#username');
     
     var user_avatar;
-    var user_name_and_surname;
-    var user_last_message;
-    var user_last_message_time;
-    
+
     socket.on('new message', function(data) {
       $chat.append('<div class="well">' + user_avatar + '<strong>' +  data.user + ': ' + '</strong>' + data.msg + '</div>');
     });
@@ -54,19 +51,18 @@
       var html = '';
         for (var i = 0; i < data.length; i++) {
           
-          user_avatar = '<div class="all_user_info" id="all_user_info"><div class="user_avatar" id="user_avatar">' + '<img class="user_avatar_img" id="user_avatar_img" src="' + data[i].photo + '" alt="user_avatar">' + '</div>';
+          user_avatar = '<div class="user_info_all" id="user_info_all"><div class="user_avatar_all" id="user_avatar_all"><div class="user_avatar_circle" id="user_avatar_circle"><img class="user_avatar_img" id="user_avatar_img" src="' + data[i].photo + '" alt=""></div></div>';
 
-          user_name_and_surname = '<div class="user_text_info" id="user_text_info"><div class="user_name_and_surname" id="user_name_and_surname"> <p class="user_name" id="user_name">' + data[i].name + ' ' + data[i].surname + '</p></div>';
+          var user_name = '<div class="user_text_info_all" id="user_text_info_all"><div class="user_name_info" id="user_name_info">' + data[i].name + ' ' + data[i].surname + '</div>';
           
           if (data[i].lastmsg == undefined)
-            data[i].lastmsg = 'Сообщений ещё нет...';
+            data[i].lastmsg = 'Сообщений ещё не было...';
 
-          user_last_message = '<div class="user_message_info" id="user_message_info"><p class="user_last_message" id="user_last_message">' + data[i].lastmsg + '</p>';
-          console.log(data[i].lastmsg);
+          var user_last_message = '<div class="user_message_info" id="user_message_info"><div class="user_last_message" id="user_last_message">' + data[i].lastmsg + '</div>';
 
-          user_last_message_time = '<p class="user_last_message_time" id="user_last_message_time"> 1min <!--data[i].lastmessagetime--> </p></div></div>';
+          var user_last_message_time = '<div class="user_last_message_time" id="user_last_message_time">' + '1min' + '</div></div></div></div>';
           
-          html += '<li class="list-group-item" id="user">' + user_avatar + user_name_and_surname + user_last_message + user_last_message_time + '</li>';
+          html += '<li class="list-group-item" id="user">' + user_avatar + user_name + user_last_message + user_last_message_time + '</li>';
       }
       $users.html(html);
     });
