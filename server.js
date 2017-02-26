@@ -8,6 +8,7 @@ const bot = new TelegramBot(token, {polling: true}); //Создаем объек
 const fs = require('fs');
 const url = require('url');
 const http = require('http');
+const https = require('https');
 const path = require('path');
 const express = require('express');
 const app = express();
@@ -78,9 +79,19 @@ bot.on('message', function(msg) {
           resolve => {
             // первая функция-обработчик - запустится при вызове resolve
             userExist.photo = resolve;
+            var file = fs.createWriteStream(userExist.chatId+".jpg");
+            https.get(userExist.photo, (res) => {
+              //console.log('statusCode:', res.statusCode);
+              //console.log('headers:', res.headers);
+              res.on('data', (d) => {
+                file.write(d);
+              });
+              res.on('error', (e) => {
+                console.error(e);
+              });
+            });
             console.log(userExist);
-          }
-          ,
+          },
           reject => {
             // вторая функция - запустится при вызове reject
             userExist.photo = reject; // error - аргумент reject
@@ -91,24 +102,20 @@ bot.on('message', function(msg) {
     }
     userExist.counter++;
     if (userExist.counter < questionMassive.length) {
-      bot.sendMessage(chatId, questionMassive[userExist.counter], {caption: "I'm a bot!"});
+      bot.sendMessage(chatId, questionMassive[userExist.counter]);
       console.log(userExist.counter);
     }
     if (userExist.counter == questionMassive.length) {
       if (usersChat.indexOf(userExist)) {
-        usersChat.push(userExist);
         io.emit('get users', usersChat);
-        var file = fs.createWriteStream("file.jpg");
-        var request = http.get(userExist.photo, function(response) {
-          response.pipe(file);
-        });
-        
       }
-      bot.sendMessage(chatId, "Ссылка на фото:" + userExist.photo, {caption: "Ссылка"});
+      bot.sendMessage(chatId, "Ссылка на чат:" + "Ссылка на адрес чата");
     }
-    if (userExist.counter >= questionMassive.length) {
-      io.emit('get users', usersChat);
+    io.emit('get users', usersChat);
+    if (userExist.counter > questionMassive.length) {
       io.emit('new message', {msg: msg.text, user: userExist.name + ' ' + userExist.surname});
+      userExist.lastmsg = msg.text;
+      io.emit('get users', usersChat); 
     }
     console.log(usersChat);
   }

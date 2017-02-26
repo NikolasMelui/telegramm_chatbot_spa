@@ -1,5 +1,5 @@
 #assets
-assets/
+assets/test_case_prog.psd
 
 #css_files
 css/
@@ -23,3 +23,6 @@ node_modules
 
 # Optional npm cache directory
 .npm
+
+#BitBucket {private repository}
+tellegram_chatbot_spa_bitbucket/
