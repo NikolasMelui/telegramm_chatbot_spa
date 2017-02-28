@@ -1,7 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api'); // Апишка телеграмм бота
 const config = require('./config.json'); // Конфигурационный файл
 const token = config.telegramm.token; // Передаем токен из конфиг файла
-const admin = require("firebase-admin"); // Апишка для firebase базы данных
+// const admin = require("firebase-admin"); // Апишка для firebase базы данных
 
 const bot = new TelegramBot(token, {polling: true}); //Создаем объект бота
 
@@ -46,7 +46,7 @@ io.sockets.on('connection', function(socket) {
 function User() {
 }
 
-var questionMassive = ["What is your name?", "What is your surname?", "What is your photo?"],
+var questionMassive = ["Как тебя зовут?", "Какая у тебя фамилия?", "Отправь мне своё фото, пожалуйста ))"],
   i = 0,
   j = 0;
 
@@ -68,8 +68,10 @@ bot.on('message', function(msg) {
       usersChat.push(user);
     } else {
       userExist.counter = 0;
+      userExist.chatId = chatId;
     }
-    bot.sendMessage(chatId, questionMassive[0], {caption: "I'm a bot!"});
+    bot.sendMessage(chatId, "Привет, добро пожаловать в наше скромное приложение) Ответь, пожалуйста, на несколько вопросов, тогда я смогу пригласить тебя в приватный чат для избранных ;D");
+    setTimeout(bot.sendMessage(chatId, questionMassive[0]), 2000);
     console.log(usersChat);
   }
   else if (userExist) {
@@ -95,7 +97,7 @@ bot.on('message', function(msg) {
           console.log(userExist); 
           } ); 
           } else { 
-          bot.sendMessage(chatId, "Это не картинка", {caption: "I'm a bot!"}); 
+          bot.sendMessage(chatId, "Это не похоже на фото, попробуй ещё разок!"); 
           userExist.counter--; 
           } 
         break;
@@ -109,13 +111,13 @@ bot.on('message', function(msg) {
       if (usersChat.indexOf(userExist)) {
         io.emit('get users', usersChat);
       }
-      bot.sendMessage(chatId, "Ссылка на чат:" + "https://calm-shore-72270.herokuapp.com/");
+      bot.sendMessage(chatId, "Отлично, я зарегистрировал тебя в нашем чате, вот тебе ссылочка: " + "https://calm-shore-72270.herokuapp.com/");
     }
     io.emit('get users', usersChat);
     if (userExist.counter > questionMassive.length) {
       var curDate = new Date().getHours() + ':' + new Date().getMinutes();
       userExist.lastmsgtime = curDate;
-      io.emit('new message', {msg: msg.text, user: userExist.name + ' ' + userExist.surname, lastmsgtime: userExist.lastmsgtime, photo: userExist.photo});
+      io.emit('new message', {msg: msg.text, user: userExist.name + ' ' + userExist.surname, lastmsgtime: userExist.lastmsgtime, photo: userExist.photo, id: userExist.chatId });
       userExist.lastmsg = msg.text;
       io.emit('get users', usersChat); 
     }
@@ -123,22 +125,22 @@ bot.on('message', function(msg) {
   }
 });
 
-/*Инициализация базы данных*/
-admin.initializeApp({
-  credential: admin.credential.cert(config.admin),
-  databaseURL: "https://telegrammchatbotspa.firebaseio.com"
-});
+// /*Инициализация базы данных*/
+// admin.initializeApp({
+//   credential: admin.credential.cert(config.admin),
+//   databaseURL: "https://telegrammchatbotspa.firebaseio.com"
+// });
 
-// Функция для нового пользователя (пушит его в базу данных)
-function dbPush(tabletName, pushed) { // Принимает имя таблицы для пушинга и, собственно, объект для пуша
-  const db = admin.database(); //
-  const ref = db.ref("/" + tabletName);
-  return ref.push(pushed).key;
-}
+// // Функция для нового пользователя (пушит его в базу данных)
+// function dbPush(tabletName, pushed) { // Принимает имя таблицы для пушинга и, собственно, объект для пуша
+//   const db = admin.database(); //
+//   const ref = db.ref("/" + tabletName);
+//   return ref.push(pushed).key;
+// }
 
-//Функция для существующего пользователя (обновляет существующие данные)
-function dbUpdate(refKey, tabletName, pushed) {
-  const db = admin.database();
-  const ref = db.ref("/" + tabletName + "/" + refKey);
-  ref.update(pushed);
-}
+// //Функция для существующего пользователя (обновляет существующие данные)
+// function dbUpdate(refKey, tabletName, pushed) {
+//   const db = admin.database();
+//   const ref = db.ref("/" + tabletName + "/" + refKey);
+//   ref.update(pushed);
+// }

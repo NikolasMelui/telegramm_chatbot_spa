@@ -40,9 +40,33 @@
     var $messageArea = $('#messageArea');
     var $users = $('#users');
     var $username = $('#username');
-    
+      
+    var last_data_id_one;
+    var last_data_id_two;
+    var last_data_id_new;
+
+
     socket.on('new message', function(data) {
-      $chat.append('<div class="well"><div class="well_message_avatar_and_time" id="well_message_avatar_and_time">' + '<div class="well_message_avatar" id="well_message_avatar">' + '<div class="user_avatar_circle" id="user_avatar_circle"><img class="user_avatar_img" id="user_avatar_img" src="' + data.photo + '" alt=""></div>' + '</div><div class="well_message_time" id="well_message_time">' + data.lastmsgtime + '</div></div><div class="well_message_text" id="well_message_text">' + data.msg + '</div></div><br>');
+      
+      var white_user = "style=\"background-color:#fff;color:#616161\"";
+      var blue_user = "style=\"background-color:#2690F7;color:#fff\""; 
+
+      last_data_id_new = data.id;
+
+      if (((last_data_id_one == undefined) && (last_data_id_two == undefined)) || (last_data_id_new == last_data_id_one)) {
+        last_data_id_one = last_data_id_new;
+        message (white_user);
+      } else if (((last_data_id_new != last_data_id_one) && (last_data_id_one != undefined)) || (last_data_id_new == last_data_id_two)) {
+        last_data_id_two = last_data_id_new;
+        message (blue_user);
+      } else if (((last_data_id_new != last_data_id_one) && (last_data_id_new != last_data_id_one)) && ((last_data_id_one != undefined) && (last_data_id_two != undefined))) {
+        last_data_id_one = last_data_id_new;
+        message (white_user);
+      }
+        
+      function message (user_color) {
+          $chat.append('<div class="well"><div class="well_message_avatar_and_time" id="well_message_avatar_and_time">' + '<div class="well_message_avatar" id="well_message_avatar">' + '<div class="user_avatar_circle" id="user_avatar_circle"><img class="user_avatar_img" id="user_avatar_img" src="' + data.photo + '" alt=""></div>' + '</div><div class="well_message_time" id="well_message_time">' + data.lastmsgtime + '</div></div><div class="well_message_text" id="well_message_text"' + user_color +'">' + data.msg + '</div></div><br>');
+        }
     });
 
     socket.on('get users', function(data) {
