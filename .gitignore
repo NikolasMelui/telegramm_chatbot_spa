@@ -2,7 +2,7 @@
 assets/test_case_prog.psd
 
 #css_files
-css/
+css
 
 #config_file
 config.json

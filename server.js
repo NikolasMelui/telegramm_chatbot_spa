@@ -5,6 +5,7 @@ const token = config.telegramm.token; // Передаем токен из кон
 
 const bot = new TelegramBot(token, {polling: true}); //Создаем объект бота
 
+//Реквайрим модули
 const fs = require('fs');
 const url = require('url');
 const http = require('http');
@@ -124,6 +125,8 @@ bot.on('message', function(msg) {
     console.log(usersChat);
   }
 });
+
+/* Пока нет приминения базе данных, но всё готово для её внедрения в проект */
 
 // /*Инициализация базы данных*/
 // admin.initializeApp({
