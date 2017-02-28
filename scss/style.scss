@@ -7,10 +7,10 @@ $color_message_list: #e9e9e9;
 $font_0: MyriadProRegular;
 
 //urls
-$url_0: url(../fonts/MyriadProRegular/MyriadProRegular.eot);
-$url_1: url(../fonts/MyriadProRegular/MyriadProRegular.eot?#iefix);
-$url_2: url(../fonts/MyriadProRegular/MyriadProRegular.woff);
-$url_3: url(../fonts/MyriadProRegular/MyriadProRegular.ttf);
+$url_0: url(../fonts/MyriadProRegular.eot);
+$url_1: url(../fonts/MyriadProRegular.eot?#iefix);
+$url_2: url(../fonts/MyriadProRegular.woff);
+$url_3: url(../fonts/MyriadProRegular.ttf);
 
 @font-face {
   font-family: $font_0;
@@ -20,6 +20,7 @@ $url_3: url(../fonts/MyriadProRegular/MyriadProRegular.ttf);
 }
 
 body {
+  font-family: MyriadProRegular;
   height: 100vh;
   background-color: #0E0E0E;
 }
@@ -29,9 +30,9 @@ img {
 }
 
 .row {
-  width: 83.33%;
+  width: 91.69%;
   height: 100vh;
-  margin: 0 8.33% 0 8.33%;
+  margin: 0 4.15% 0 4.15%;
   #user_list {
     padding: 0;
     width: 22.43%;
@@ -44,7 +45,7 @@ img {
       background-color: #181818;
       #logo {
         width: 131px;
-        margin: 0 0 16px 0;
+        margin: 0 0 15px 0;
       }
       #users {
         margin: 0;
@@ -57,26 +58,29 @@ img {
           color: #ffffff;
           display: flex;
           overflow: hidden;
+          margin-bottom: 1px;
           #user_info_all {
             width: 100%;
             margin-top: 27px;
             display: flex;
             #user_avatar_all {
               border-bottom: 1px solid #303030;
-                #user_avatar_circle {
-                  overflow: hidden;
-                  border-radius: 35px;
-                  width: 50px;
-                  margin: 0;
-                  #user_avatar_img {
-                    height: 50px;
-                  }
+              #user_avatar_circle {
+                background-color: ghostwhite;
+                overflow: hidden;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                #user_avatar_img {
+                  margin-top: -9px;
+                }
               }
             }
             #user_text_info_all {
-              width: 100%;
+              width: 58%;
               padding: 6px 0 0 17px;
               #user_name_info {
+              	font-size: 16px;
               }
               #user_message_info {
                 width: 100%;
@@ -84,10 +88,14 @@ img {
                 #user_last_message {
                   font-size: 13px;
                   color: #a8a8a8;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
                 }
                 #user_last_message_time {
                   position: absolute;
-                  right: 8px;
+                  right: 17px;
+                  top: 55px;
                   color: #434343;
                   font-size: 12px;
                 }
@@ -98,29 +106,66 @@ img {
       }
     }
   }
-  #user_avatar_circle {
-                  overflow: hidden;
-                  border-radius: 35px;
-                  width: 50px;
-                  margin: 0;
-                  #user_avatar_img {
-                    height: 50px;
-                  }
-                }
-  #message_list {
-    height: 100vh;
-    width: 77.56%;
-    margin: 0;
-    padding: 0;
-    border: none;
-    border-radius: 0;
-    background-color: #e9e9e9;
-    #chat {
-      height: 100vh;
-      .well {
-        display: flex;
-        width: 72%;
-        margin: 35px 25px;
+}
+
+#message_list {
+  height: 100vh;
+  width: 77.56%;
+  margin: 0;
+  padding: 36px 32px;
+  border: none;
+  border-radius: 0;
+  background-color: #e9e9e9;
+  #chat {
+	overflow: scroll;
+    height: 100%;
+    .well {
+      display: inline-flex;
+      background-color: #e9e9e9;
+      box-shadow: none;
+      border: none;
+      margin: 0 0 9px 0;
+      padding: 0;
+      min-height: 66px;
+      max-width: 468px;
+      .well_message_avatar_and_time {
+        height: 56px;
+        margin-top: 10px;
+        .well_message_avatar {
+        #user_avatar_circle {
+          background-color: ghostwhite;
+          overflow: hidden;
+          width: 35px;
+          height: 35px;
+          border-radius: 50%;
+          #user_avatar_img {
+            margin-top: -9px;
+          }
+        }
+    }
+      .well_message_time {
+        margin: 8px 0 0 8px;
+	    font-size: 12px;
+	    color: #505050;
+      }
+  }
+      .well_message_text {
+	    padding: 15px 20px 15px 20px;
+	    margin: 0px 33px 12px 30px;
+	    background-color: #fff;
+	    border-radius: 4px;
+	    max-width: 468px;
+	    color: #616161;
+	    font-size: 16px;
+        min-width: 272px;
+        &::after {
+		    content: "";
+		    position: absolute;
+		    left: 80.6px;
+		    top: 54px;
+		    border: 9px solid transparent;
+		    border-right: 15px solid #fff;
+        }
       }
     }
   }

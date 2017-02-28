@@ -31,9 +31,16 @@ app.get('/', function(req, res) {
 
 //Connection
 io.sockets.on('connection', function(socket) {
+
   connections.push(socket); // сокеты создаются при заходе на веб-морду (увы)
   console.log('Connection: %s socket connected', connections.length); // кол-во сокетов - для отладки
   io.emit('get users', usersChat); // смотрим кол-во юзеров в чате
+
+  socket.on('disconnect', function(data) {
+    connections.splice(connections.indexOf(socket), 1);
+    console.log('Connection: %s socket connected', connections.length);
+  });
+
 });
 
 function User() {
@@ -74,30 +81,23 @@ bot.on('message', function(msg) {
       case 1:
         userExist.surname = msg.text;
         break;
-      case 2:
-        bot.getFileLink(msg.photo[0].file_id).then(
-          resolve => {
-            // первая функция-обработчик - запустится при вызове resolve
-            userExist.photo = resolve;
-            var file = fs.createWriteStream(userExist.chatId+".jpg");
-            https.get(userExist.photo, (res) => {
-              //console.log('statusCode:', res.statusCode);
-              //console.log('headers:', res.headers);
-              res.on('data', (d) => {
-                file.write(d);
-              });
-              res.on('error', (e) => {
-                console.error(e);
-              });
-            });
-            console.log(userExist);
-          },
-          reject => {
-            // вторая функция - запустится при вызове reject
-            userExist.photo = reject; // error - аргумент reject
-            console.log(userExist);
-          }
-        );
+      case 2: 
+        if(msg.photo) { 
+          bot.getFileLink(msg.photo[0].file_id).then( 
+          resolve => { 
+          // первая функция-обработчик - запустится при вызове resolve 
+          userExist.photo = resolve; 
+          console.log(userExist); 
+          }, 
+          reject => { 
+          // вторая функция - запустится при вызове reject 
+          userExist.photo =reject; // error - аргумент reject 
+          console.log(userExist); 
+          } ); 
+          } else { 
+          bot.sendMessage(chatId, "Это не картинка", {caption: "I'm a bot!"}); 
+          userExist.counter--; 
+          } 
         break;
     }
     userExist.counter++;
@@ -109,11 +109,13 @@ bot.on('message', function(msg) {
       if (usersChat.indexOf(userExist)) {
         io.emit('get users', usersChat);
       }
-      bot.sendMessage(chatId, "Ссылка на чат:" + "Ссылка на адрес чата");
+      bot.sendMessage(chatId, "Ссылка на чат:" + "https://calm-shore-72270.herokuapp.com/");
     }
     io.emit('get users', usersChat);
     if (userExist.counter > questionMassive.length) {
-      io.emit('new message', {msg: msg.text, user: userExist.name + ' ' + userExist.surname});
+      var curDate = new Date().getHours() + ':' + new Date().getMinutes();
+      userExist.lastmsgtime = curDate;
+      io.emit('new message', {msg: msg.text, user: userExist.name + ' ' + userExist.surname, lastmsgtime: userExist.lastmsgtime, photo: userExist.photo});
       userExist.lastmsg = msg.text;
       io.emit('get users', usersChat); 
     }
