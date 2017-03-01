@@ -8,7 +8,7 @@ SPA that receives information from telegramm chatbot!
 - SCSS, Bootstrap;
 - JavaScript, jquery;
 - Node.js, Socket.io, Node-telegram-api;
-- NPM; - GULP.
+- NPM; GULP.
 
 
 <h3>Usage</h3>
