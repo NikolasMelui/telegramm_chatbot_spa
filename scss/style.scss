@@ -28,7 +28,7 @@ img {
         padding: 0;
         width: 22.43%;
         #user_list_well {
-            margin: 0;
+            margin: 0;  
             padding: 35px 0 0 25px;
             height: 100vh;
             border: none;
@@ -108,62 +108,72 @@ img {
     background-color: #e9e9e9;
     #chat {
         overflow: scroll;
-        height: 100%;
+        height: 83%;
+        width: 100%;
         &::-webkit-scrollbar-track {
             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
             background-color: #F5F5F5;
         }
-        &::-webkit-scrollbar {
-            width: 12px;
-            background-color: #F5F5F5;
-        }
+//        &::-webkit-scrollbar {
+//            width: 12px;
+//            background-color: #F5F5F5;
+//        }
         &::-webkit-scrollbar-thumb {
             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
             background-color: #555;
         }
-        .well {
-            display: inline-flex;
-            background-color: #e9e9e9;
-            box-shadow: none;
-            border: none;
-            margin: 0 0 9px 0;
-            padding: 0;
-            min-height: 66px;
-            max-width: 468px;
-            .well_message_avatar_and_time {
-                height: 56px;
-                margin-top: 10px;
-                .well_message_avatar {
-                    #user_avatar_circle {
-                        background-color: ghostwhite;
-                        overflow: hidden;
-                        width: 35px;
-                        height: 35px;
-                        border-radius: 50%;
-                        #user_avatar_img {
-                            margin-top: -9px;
+        .chat_inside { 
+            width: 39%;
+            .well {
+                display: inline-flex;
+                background-color: #e9e9e9;
+                box-shadow: none;
+                border: none;
+                margin: 0 0 9px 0;
+                padding: 0;
+                min-height: 66px;
+                max-width: 468px;
+                .well_message_avatar_and_time {
+                    height: 56px;
+                    margin-top: 10px;
+                    .well_message_avatar {
+                        #user_avatar_circle {
+                            background-color: ghostwhite;
+                            overflow: hidden;
+                            width: 35px;
+                            height: 35px;
+                            border-radius: 50%;
+                            #user_avatar_img {
+                                margin-top: -9px;
+                            }
                         }
                     }
+                    .well_message_time {
+                        margin: 8px 0 0 8px;
+                        font-size: 12px;
+                        color: #505050;
+                    }
                 }
-                .well_message_time {
-                    margin: 8px 0 0 8px;
-                    font-size: 12px;
-                    color: #505050;
+                .well_message_text {
+                    padding: 15px 20px 15px 20px;
+                    margin: 0px 33px 12px 30px;
+                    background-color: $color_white;
+                    border-radius: 4px;
+                    max-width: 468px;
+                    color: #616161;
+                    font-size: 16px;
+                    min-width: 272px;
                 }
             }
-            .well_message_text {
-                padding: 15px 20px 15px 20px;
-                margin: 0px 33px 12px 30px;
-                background-color: $color_white;
-                border-radius: 4px;
-                max-width: 468px;
-                color: #616161;
-                font-size: 16px;
-                min-width: 272px;
-            }
-        }
+    }   }
+}
+
+@media screen and (min-width:1025px) and (max-width:1440px) {
+    .chat_inside {
+        width: 54%;
     }
 }
+
 @media screen and (min-width:769px) and (max-width:992px) {
     .row {
         width: 100%;
@@ -206,6 +216,9 @@ img {
             }
         }
     }
+}
+.chat_inside {
+        width: 73%;
 }
 @media screen and (min-width:531px) and (max-width:768px) {
     .row {
@@ -254,6 +267,8 @@ img {
             padding: 22px 6px;
             width: 62,57%;
             #chat {
+                .chat_inside {
+                    width: 66%;
                 .well {
                     max-width: 200px;
                     min-height: 35px;
@@ -275,7 +290,7 @@ img {
                     }
                 }
             }
-        }
+        } }
     }
 }
 @media screen and (min-width:449px) and (max-width:530px) {
@@ -325,6 +340,8 @@ img {
             padding: 22px 6px;
             width: 62,57%;
             #chat {
+                .chat_inside {
+                    width: 80%;
                 .well {
                     max-width: 200px;
                     min-height: 35px;
@@ -346,7 +363,7 @@ img {
                     }
                 }
             }
-        }
+        }}
     }
 }
 @media screen and (min-width:401px) and (max-width:448px) {
@@ -397,6 +414,8 @@ img {
             padding: 22px 6px;
             width: 62,57%;
             #chat {
+                .chat_inside {
+                   width: 85%;
                 .well {
                     max-width: 200px;
                     min-height: 35px;
@@ -418,7 +437,7 @@ img {
                     }
                 }
             }
-        }
+        }}
     }
 }
 @media screen and (min-width:350px) and (max-width:400px) {
@@ -469,6 +488,8 @@ img {
             padding: 22px 6px;
             width: 62,57%;
             #chat {
+                .chat_inside {
+                   width: 85%;
                 .well {
                     max-width: 175px;
                     min-height: 25px;
@@ -490,7 +511,7 @@ img {
                     }
                 }
             }
-        }
+        }}
     }
 }
 @media screen and (min-width:300px) and (max-width:349px) {
@@ -541,6 +562,8 @@ img {
             padding: 22px 6px;
             width: 62,57%;
             #chat {
+                .chat_inside {
+                    width: 96%;
                 .well {
                     max-width: 184px;
                     max-width: 175px;
@@ -566,6 +589,6 @@ img {
                     }
                 }
             }
-        }
+        }}
     }
 }

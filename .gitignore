@@ -1,8 +1,5 @@
-#assets
-assets/test_case_prog.psd
-
 #css_files
-css
+css/
 
 #config_file
 config.json
@@ -10,16 +7,8 @@ config.json
 #idea_settings
 .idea/
 
-# Logs
-logs
-*.log
-npm-debug.log*
+#logs
+npm-debug.log
 
-# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
-.grunt
-
-# Dependency directories
-node_modules
-
-# Optional npm cache directory
-.npm
+#dependency_directories
+node_modules/

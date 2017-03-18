@@ -26,7 +26,15 @@
     </div>
   </div>
   <div class="col-md-8" id="message_list">
-    <div id="chat" class="chat"></div>
+    <div id="chat" class="chat"><div id="chat_inside" class="chat_inside"> </div></div>
+    <form class="messageForm" id="messageForm">
+      <div class="form_group" id="form_group">
+        <label for="message"></label>
+        <input type="text" name="" class="form-control" id="message" placeholder="Write a massage..." required></input>
+        <br>
+        <input type="submit" value="Send Message" class="btn btn-primary">
+      </div>
+    </form>
   </div>
 </div>
 
@@ -34,66 +42,112 @@
 <script>
   
   $(function() {
-    var socket = io.connect();
+    var id = getUrlVars()["id"];//https://calm-shore-72270.herokuapp.com/?id=*****
+    var socket = io.connect(); // При создании соединения тут порождается СОКЕТ (одно из подключений к серверной стороне, т.е. с одной серверной стороной будет взаимодействовать столько сокетов, сколько народу зайдёт на веб-морду)
+    //TODO: вообще это плохой вариант, сокет должен создаваться 50\50 (1 часть - если создан аккаунт в чате телеграмм-ботом. т.е. логика телеграмм бота отработала полностью, 2 часть - при заходе на веб-морду)
+
+      //data.user_last_message_timee = new Date().getHours() + ':' + new Date().getMinutes();
+
     var $message = $('#message');
-    var $chat = $('#chat');
+    var $messageForm = $('#messageForm');
+    var $chat_inside = $('#chat_inside');
     var $messageArea = $('#messageArea');
     var $users = $('#users');
     var $username = $('#username');
-      
-    var last_data_id_one;
-    var last_data_id_two;
-    var last_data_id_new;
 
+    // For colors!
+    var userWeb; //пользователь
+    var last10Msgs = []; //пользователь
+
+    $messageForm.submit(function(e) {
+      e.preventDefault();
+        socket.emit('send userWebId', userWeb.chatId);
+        socket.emit('send message', $message.val());
+          $message.val('');
+    });
 
     socket.on('new message', function(data) {
-      
-      var white_user = "style=\"background-color:#fff;color:#616161\"";
-      var blue_user = "style=\"background-color:#2690F7;color:#fff\""; 
+      show_message(data);
+    });
 
-      last_data_id_new = data.id;
-
-      if (((last_data_id_one == undefined) && (last_data_id_two == undefined)) || (last_data_id_new == last_data_id_one)) {
-        last_data_id_one = last_data_id_new;
-        message (white_user);
-      } else if (((last_data_id_new != last_data_id_one) && (last_data_id_one != undefined)) || (last_data_id_new == last_data_id_two)) {
-        last_data_id_two = last_data_id_new;
-        message (blue_user);
-      } else if (((last_data_id_new != last_data_id_one) && (last_data_id_new != last_data_id_one)) && ((last_data_id_one != undefined) && (last_data_id_two != undefined))) {
-        last_data_id_one = last_data_id_new;
-        message (white_user);
+    socket.on('get messages', function(data) {
+      for (var i = 0; i < data.length; i++) {
+        show_message(data[i]);
       }
-        
-      function message (user_color) {
-          $chat.append('<div class="well"><div class="well_message_avatar_and_time" id="well_message_avatar_and_time">' + '<div class="well_message_avatar" id="well_message_avatar">' + '<div class="user_avatar_circle" id="user_avatar_circle"><img class="user_avatar_img" id="user_avatar_img" src="' + data.photo + '" alt=""></div>' + '</div><div class="well_message_time" id="well_message_time">' + data.lastmsgtime + '</div></div><div class="well_message_text" id="well_message_text"' + user_color +'">' + data.msg + '</div></div><br>');
-        }
     });
 
     socket.on('get users', function(data) {
       var html = '';
         for (var i = 0; i < data.length; i++) {
-          
+          if (data[i].chatId == id) { 
+            userWeb = data[i];
+          }
           if(data[i].photo != undefined) {
 
           var user_avatar = '<div class="user_info_all" id="user_info_all"><div class="user_avatar_all" id="user_avatar_all"><div class="user_avatar_circle" id="user_avatar_circle"><img class="user_avatar_img" id="user_avatar_img" src="' + data[i].photo + '" alt=""></div></div>';
 
           var user_name = '<div class="user_text_info_all" id="user_text_info_all"><div class="user_name_info" id="user_name_info">' + data[i].name + ' ' + data[i].surname + '</div>';
           
-          if (data[i].lastmsg == undefined)
-            data[i].lastmsg = 'Сообщений ещё не было...';
+          if (data[i].last_msg == undefined)
+            data[i].last_msg = '';
 
-          var user_last_message = '<div class="user_message_info" id="user_message_info"><div class="user_last_message" id="user_last_message">' + data[i].lastmsg + '</div>';
+          var user_last_message = '<div class="user_message_info" id="user_message_info"><div class="user_last_message" id="user_last_message">' + data[i].last_msg + '</div>';
 
-          var user_time_after_last_message = '<div class="user_last_message_time" id="user_last_message_time">' + '1min' + '</div></div></div></div>';
+          //new
+          var tmp_user_timer = data[i].timer;
+
+          if(data[i].last_msg_timer == undefined || data[i].last_msg_timer == 0) 
+            data[i].last_msg_timer = '';
           
-          html += '<li class="list-group-item" id="user">' + user_avatar + user_name + user_last_message + user_time_after_last_message + '</li>';
-      }
+          var tmp_user_timer_minutes = Math.floor(tmp_user_timer/1000/60%60);
+          var tmp_user_timer_seconds = Math.floor(tmp_user_timer/1000%60);
+          
+          if(tmp_user_timer_minutes < 10) tmp_user_timer_minutes = '0' + tmp_user_timer_minutes; 
+          if(tmp_user_timer_seconds < 10) tmp_user_timer_seconds = '0' + tmp_user_timer_seconds;
+
+          var tmp_user_timer = tmp_user_timer_minutes + ':' + tmp_user_timer_seconds;
+          var user_timer = '<div class="user_last_message_time" id="user_last_message_time">' + tmp_user_timer + '</div></div></div></div>';
+
+          html += '<li class="list-group-item" id="user">' + user_avatar + user_name + user_last_message + user_timer + '</li>';
+          }
       $users.html(html);
     }
     });
 
-  });
+    function show_message(data) {
+      var white_msg_style = ["style=\"float: left;\"", "style=\"\"", "style=\"background-color:#fff;color:#616161\""];
+      var blue_msg_style = ["style=\"float: right;\"", "style=\"order: 2;\"", "style=\"background-color:#2690F7;color:#fff\""];
 
+      if (data.last_msg_color == 'white_msg_color') {
+        message(white_msg_style); 
+      }
+      else if(data.last_msg_color == 'blue_msg_color') {
+        message(blue_msg_style);
+      } 
+
+        function message(msg_style) {          
+          $chat_inside.append('<div class="well"' + msg_style[0] + '><div class="well_message_avatar_and_time" id="well_message_avatar_and_time"' + msg_style[1] + '><div class="well_message_avatar" id="well_message_avatar">' + '<div class="user_avatar_circle" id="user_avatar_circle"><img class="user_avatar_img" id="user_avatar_img" src="' + data.photo + '" alt=""></div>' + '</div><div class="well_message_time" id="well_message_time">' + data.last_msg_time + '</div></div><div class="well_message_text" id="well_message_text"' + msg_style[2] +'>' + data.msg + '</div></div><br>');
+      }
+    }
+
+    function getUrlVars() {
+        var vars = {};
+        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+          vars[key] = value;
+        });
+        return vars;
+    }
+
+  // document.onkeyup = function (e) {
+  //     e = e || window.event;
+  //     if (e.keyCode===13 && $message.val()!=' ') {
+  //       $messageForm.submit();
+  //     }
+  //     return false;
+  // }
+
+
+});
 </script>
 
 

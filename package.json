@@ -1,7 +1,7 @@
 {
   "name": "telegramm_chatbot_spa",
   "version": "1.0.0",
-  "description": "Production version of Telegramm-Bot-Chat!",
+  "description": "Production version of Telegramm-Bot-Chat without Telegramm!",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
